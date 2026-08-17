@@ -1,0 +1,171 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+</head>
+
+<body>
+
+<h1>Telecom Dashboard</h1>
+<br><br>
+<h3>Total Customers: {{ customers }}</h3>
+
+<h3>Total Plans: {{ plans }}</h3>
+
+<h3>Total Revenue: ₹{{ revenue }}</h3>
+
+<br>
+
+<a href="/">Home</a> |
+<a href="/customers">View Customers</a> |
+<a href="/add_customer">Add Customer</a> |
+<a href="/bills">View Bills</a>
+
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Telecom Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+overflow-x:hidden;
+}
+
+#sidebar{
+height:100vh;
+background:#212529;
+color:white;
+padding-top:20px;
+}
+
+#sidebar a{
+color:white;
+text-decoration:none;
+display:block;
+padding:10px;
+}
+
+#sidebar a:hover{
+background:#343a40;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+<div class="row">
+
+<!-- Sidebar -->
+
+<div class="col-md-2" id="sidebar">
+
+<h4 class="text-center">Telecom Admin</h4>
+
+<hr>
+
+<a href="/dashboard">Dashboard</a>
+<a href="/customers">Customers</a>
+<a href="/add_customer">Add Customer</a>
+<a href="/bills">Bills</a>
+<a href="/logout">Logout</a>
+
+</div>
+
+<!-- Main Content -->
+
+<div class="col-md-10 p-4">
+
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+
+<div class="card text-white bg-primary mb-3">
+<div class="card-body">
+<h5>Total Customers</h5>
+<h2>{{ customers }}</h2>
+</div>
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card text-white bg-success mb-3">
+<div class="card-body">
+<h5>Total Plans</h5>
+<h2>{{ plans }}</h2>
+</div>
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card text-white bg-warning mb-3">
+<div class="card-body">
+<h5>Total Revenue</h5>
+<h2>₹{{ revenue }}</h2>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-5 justify-content-center">
+
+<div class="col-md-5">
+
+<h5 class="text-center">Customers by Plan</h5>
+
+<canvas id="planChart" style="max-height:300px;"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const labels = {{ labels | tojson }};
+const data = {{ values | tojson }};
+
+const ctx = document.getElementById('planChart');
+
+new Chart(ctx,{
+type:'pie',
+data:{
+labels:labels,
+datasets:[{
+data:data,
+backgroundColor:['#0d6efd','#198754','#ffc107']
+}]
+}
+});
+
+</script>
+
+</body>
+</html>
