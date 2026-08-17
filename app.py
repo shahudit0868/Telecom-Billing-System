@@ -8,6 +8,18 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
+from functools import wraps
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 # Database connection
 db = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
@@ -19,11 +31,11 @@ db = mysql.connector.connect(
 # Home Page
 @app.route('/')
 def home():
-    return render_template("home.html")
-
+    return redirect(url_for('login'))
 
 # Add Customer Page
 @app.route('/add_customer', methods=['GET', 'POST'])
+@login_required
 def add_customer():
     if request.method == 'POST':
         name = request.form['name']
@@ -43,6 +55,7 @@ def add_customer():
     return render_template("add_customer.html")
 
 @app.route('/customers')
+@login_required
 def view_customers():
     search = request.args.get('search')
 
@@ -72,6 +85,7 @@ def view_customers():
     return render_template("customers.html", customers=customers)
 
 @app.route('/delete_customer/<int:id>')
+@login_required
 def delete_customer(id):
     cursor = db.cursor()
 
@@ -97,6 +111,7 @@ def delete_customer(id):
 
     return redirect(url_for('view_customers'))
 @app.route('/edit_customer/<int:id>', methods=['GET','POST'])
+@login_required
 def edit_customer(id):
 
     cursor = db.cursor()
@@ -150,6 +165,7 @@ def edit_customer(id):
 #         revenue=total_revenue
 #     )
 @app.route('/dashboard')
+@login_required
 def dashboard():
 
     cursor = db.cursor()
@@ -193,6 +209,7 @@ def dashboard():
 
 
 @app.route('/generate_bill/<int:id>')
+@login_required
 def generate_bill(id):
 
     cursor = db.cursor()
@@ -218,6 +235,7 @@ def generate_bill(id):
     return redirect('/customers')
 
 @app.route('/bills')
+@login_required
 def view_bills():
 
     cursor = db.cursor()
